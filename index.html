@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SQL Detective - Insper Data</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <img src="assets/images/insperdata_logo_preferencial.png" alt="Insper Data Logo" class="logo">
+            <h1>SQL Detective</h1>
+        </header>
+
+        <div id="start-screen" class="game-screen active">
+            <h2>Bem-vindo(a), Detetive!</h2>
+            <p>O roubo do chip "Quantum Core" chocou a Expo Tech. Você tem 15 minutos para analisar os dados e encontrar o ladrão antes que ele escape para sempre.</p>
+            <p>Para se familiarizar com a ferramenta, você fará um breve tutorial antes de começar.</p>
+            <button id="start-tutorial-button" class="btn">Iniciar Caso</button>
+        </div>
+
+        <div id="tutorial-screen" class="game-screen">
+            <h2>Tutorial: Entendendo o Terminal de Detetive</h2>
+            <div id="tutorial-content">
+                </div>
+            <div class="tutorial-actions">
+                <button id="prev-tutorial-button" class="btn">Anterior</button>
+                <button id="next-tutorial-button" class="btn">Próximo</button>
+                <button id="skip-tutorial-button" class="btn">Pular Tutorial</button>
+                <button id="start-game-button" class="btn">Começar Jogo!</button>
+            </div>
+        </div>
+
+        <div id="main-game-screen" class="game-screen">
+            <div class="header-game">
+                <p>Tempo restante: <span id="timer">15:00</span></p>
+                <div class="case-brief-container">
+                    <h3>Detalhes do Caso</h3>
+                    <p id="case-brief">O roubo do protótipo 'Quantum Core' ocorreu no Laboratório de Robótica por volta das 14:30. A área estava lotada. O criminoso pode ter se misturado à multidão.</p>
+                </div>
+                <button id="help-button" class="btn btn-help">Ajuda</button>
+            </div>
+            
+            <div class="game-area">
+                <div class="query-builder">
+                    <h3>Terminal</h3>
+                    <div class="query-display">
+                        <span id="query-output">Sua consulta será exibida aqui...</span>
+                    </div>
+                    <div class="query-actions">
+                        <button id="execute-query-button" class="btn btn-execute">Executar</button>
+                        <button id="clear-query-button" class="btn btn-clear">Limpar</button>
+                    </div>
+                </div>
+
+                <div class="interactive-panel">
+                    <div class="panel">
+                        <h3>Tabelas</h3>
+                        <div id="tables-list" class="interactive-list"></div>
+                    </div>
+                    <div class="panel">
+                        <h3>Comandos</h3>
+                        <div id="keywords-buttons" class="keywords-grid">
+                            <button class="btn keyword-btn" data-keyword="SELECT">SELECT</button>
+                            <button class="btn keyword-btn" data-keyword="FROM">FROM</button>
+                            <button class="btn keyword-btn" data-keyword="WHERE">WHERE</button>
+                            <button class="btn keyword-btn" data-keyword="AND">AND</button>
+                            <button class="btn keyword-btn" data-keyword="ORDER BY">ORDER BY</button>
+                            <button class="btn keyword-btn" data-keyword="ASC">ASC</button>
+                            <button class="btn keyword-btn" data-keyword="DESC">DESC</button>
+                        </div>
+                    </div>
+                    <div class="panel">
+                        <h3>Colunas</h3>
+                        <div id="columns-list" class="interactive-list"></div>
+                    </div>
+                </div>
+
+                <div class="results-area">
+                    <div class="results-header">
+                        <h3>Resultados</h3>
+                        <button id="copy-results-button" class="btn btn-copy">Copiar para Anotações</button>
+                    </div>
+                    <div id="results-output"></div>
+                </div>
+
+                <div class="notes-area">
+                    <h3>Anotações</h3>
+                    <textarea id="notes-input" placeholder="Anote suas descobertas aqui..."></textarea>
+                </div>
+            </div>
+
+            <div class="answer-area">
+                <div class="answer-input-group">
+                    <input type="text" id="answer-input" placeholder="Digite o nome do suspeito aqui...">
+                    <button id="submit-answer-button" class="btn btn-submit">Enviar Resposta</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="help-modal" class="modal">
+            <div class="modal-content">
+                <span class="close-button">&times;</span>
+                <h3>Ajuda do SQL Detective</h3>
+                <div id="help-content">
+                    <h4>Comandos</h4>
+                    <div id="command-help">
+                        </div>
+                    <h4>Dicas</h4>
+                    <div id="hint-area">
+                        <button id="reveal-hint-1" class="btn btn-hint">Revelar Dica 1</button>
+                        <p id="hint-1-text" class="hidden-hint"></p>
+                        <button id="reveal-hint-2" class="btn btn-hint">Revelar Dica 2</button>
+                        <p id="hint-2-text" class="hidden-hint"></p>
+                        <button id="reveal-hint-3" class="btn btn-hint">Revelar Dica 3</button>
+                        <p id="hint-3-text" class="hidden-hint"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="where-modal" class="modal">
+            <div class="modal-content">
+                <span class="close-button where-close">&times;</span>
+                <h3>Adicionar Condição (WHERE)</h3>
+                <p>Digite a condição. Ex: <strong>id = 7</strong> ou <strong>nome = 'Guilherme Siqueira'</strong></p>
+                <input type="text" id="where-input" class="modal-input" placeholder="Ex: ocupacao = 'Representante Innovatech'">
+                <button id="where-confirm" class="btn">Adicionar</button>
+            </div>
+        </div>
+
+        <div id="orderby-modal" class="modal">
+            <div class="modal-content">
+                <span class="close-button orderby-close">&times;</span>
+                <h3>Adicionar Ordenação (ORDER BY)</h3>
+                <p>Digite a coluna para ordenar.</p>
+                <input type="text" id="orderby-input" class="modal-input" placeholder="Ex: nome">
+                <button id="orderby-confirm" class="btn">Adicionar</button>
+            </div>
+        </div>
+
+        <div id="victory-screen" class="game-screen">
+            <h2>Parabéns, Detetive!</h2>
+            <p>Você resolveu o caso a tempo. O ladrão foi pego graças à sua astúcia. A Innovatech agradece a sua dedicação!</p>
+            <button id="restart-button-victory" class="btn">Jogar Novamente</button>
+        </div>
+
+        <div id="game-over-screen" class="game-screen">
+            <h2>Tempo Esgotado!</h2>
+            <p>O ladrão escapou e não deixou rastros. A polícia lamenta, mas o caso foi encerrado. Tente novamente!</p>
+            <button id="restart-button-game-over" class="btn">Jogar Novamente</button>
+        </div>
+    </div>
+    
+    <script src="data/db.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
