@@ -103,9 +103,9 @@ const helpContent = {
 };
 
 const hints = [
-    "Comece sua investigação buscando por todos que estavam no local do crime. A tabela <strong>eventos</strong> pode ser útil.",
-    "O ladrão tinha acesso ao protótipo. Busque na tabela <strong>historicos</strong> por pessoas com conexões diretas com a 'Innovatech Solutions' ou com a 'Insper'.",
-    "Analise os horários na tabela <strong>eventos</strong>. O crime ocorreu exatamente às 14:30. Quem estava por perto neste momento?"
+    "Comece sua investigação buscando pelo id do local do crime. A tabela <strong>locais</strong> pode ser útil.",
+    "O ladrão estava no local próximo às 14:30. Busque na tabela <strong>eventos</strong> por pessoas que estavam no local 101, perto deste horário.",
+    "Analise os históricos na tabela <strong>históricos</strong>. Quem são os prováveis suspeitos? Quais os eventos associados a eles?"
 ];
 let hintsRevealed = []; // Array para rastrear dicas reveladas
 
