@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SQL Detective - Insper Data</title>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
     <div class="container">
         <header>
@@ -15,7 +17,8 @@
 
         <div id="start-screen" class="game-screen active">
             <h2>Bem-vindo(a), Detetive!</h2>
-            <p>O roubo do chip "Quantum Core" chocou a Expo Tech. Você tem 15 minutos para analisar os dados e encontrar o ladrão antes que ele escape para sempre.</p>
+            <p>O roubo do chip "Quantum Core" chocou a Expo Tech. Você tem 15 minutos para analisar os dados e encontrar
+                o ladrão antes que ele escape para sempre.</p>
             <p>Para se familiarizar com a ferramenta, você fará um breve tutorial antes de começar.</p>
             <button id="start-tutorial-button" class="btn">Iniciar Caso</button>
         </div>
@@ -23,25 +26,47 @@
         <div id="tutorial-screen" class="game-screen">
             <h2>Tutorial: Entendendo o Terminal de Detetive</h2>
             <div id="tutorial-content">
-                </div>
+            </div>
             <div class="tutorial-actions">
                 <button id="prev-tutorial-button" class="btn">Anterior</button>
                 <button id="next-tutorial-button" class="btn">Próximo</button>
                 <button id="skip-tutorial-button" class="btn">Pular Tutorial</button>
-                <button id="start-game-button" class="btn">Começar Jogo!</button>
+                <button id="start-story-button" class="btn">Continuar</button>
             </div>
+        </div>
+
+        <div id="story-screen" class="game-screen">
+            <h2>O Caso: Roubo do "Quantum Core"</h2>
+            <div class="story-box">
+                <p>No coração do evento Expo Tech, a renomada empresa <strong>Innovatech</strong> exibia com orgulho o seu mais
+                    valioso protótipo: o chip <strong>"Quantum Core"</strong>. Um feito tecnológico que prometia revolucionar a
+                    indústria.</p>
+                <p>No entanto, a feira está repleta de interesses conflitantes. Diversos competidores e indivíduos com
+                    ambições pessoais estão de olho no projeto. Há rumores de engenheiros de software descontentes e até mesmo
+                    de uma organização rival, a TechSolutions Inc., que não mede esforços para ter uma vantagem competitiva.</p>
+                <p>O chip desapareceu do Laboratório de Robótica às 14:30. A Innovatech assegura que seus funcionários
+                    são leais e dedicaram anos de trabalho ao projeto, descartando qualquer envolvimento interno.</p>
+                <p>Sua missão é investigar as movimentações de todos os participantes do evento e descobrir o verdadeiro
+                    culpado. O banco de dados da Expo Tech é sua única ferramenta, e o tempo está se esgotando.</p>
+            </div>
+            <button id="start-main-game-button" class="btn">Começar Investigação!</button>
         </div>
 
         <div id="main-game-screen" class="game-screen">
             <div class="header-game">
-                <p>Tempo restante: <span id="timer">15:00</span></p>
+                <div class="timer-container">
+                    <p class="timer-label">Tempo</p>
+                    <p id="timer">15:00</p>
+                </div>
                 <div class="case-brief-container">
                     <h3>Detalhes do Caso</h3>
-                    <p id="case-brief">O roubo do protótipo 'Quantum Core' ocorreu no Laboratório de Robótica por volta das 14:30. A área estava lotada. O criminoso pode ter se misturado à multidão.</p>
+                    <p id="case-brief">O roubo do protótipo 'Quantum Core', da empresa Innovatech, ocorreu no
+                        Laboratório de Robótica às 14:30. A área estava lotada. O criminoso pode ter se misturado à
+                        multidão.</p>
                 </div>
                 <button id="help-button" class="btn btn-help">Ajuda</button>
             </div>
-            
+
             <div class="game-area">
                 <div class="query-builder">
                     <h3>Terminal</h3>
@@ -106,7 +131,7 @@
                 <div id="help-content">
                     <h4>Comandos</h4>
                     <div id="command-help">
-                        </div>
+                    </div>
                     <h4>Dicas</h4>
                     <div id="hint-area">
                         <button id="reveal-hint-1" class="btn btn-hint">Revelar Dica 1</button>
@@ -125,7 +150,8 @@
                 <span class="close-button where-close">&times;</span>
                 <h3>Adicionar Condição (WHERE)</h3>
                 <p>Digite a condição. Ex: <strong>id = 7</strong> ou <strong>nome = 'Guilherme Siqueira'</strong></p>
-                <input type="text" id="where-input" class="modal-input" placeholder="Ex: ocupacao = 'Representante Innovatech'">
+                <input type="text" id="where-input" class="modal-input"
+                    placeholder="Ex: ocupacao = 'Representante Innovatech'">
                 <button id="where-confirm" class="btn">Adicionar</button>
             </div>
         </div>
@@ -142,18 +168,26 @@
 
         <div id="victory-screen" class="game-screen">
             <h2>Parabéns, Detetive!</h2>
-            <p>Você resolveu o caso a tempo. O ladrão foi pego graças à sua astúcia. A Innovatech agradece a sua dedicação!</p>
+            <p>Você resolveu o caso a tempo. O ladrão foi pego graças à sua astúcia. A Innovatech agradece a sua
+                dedicação!</p>
             <button id="restart-button-victory" class="btn">Jogar Novamente</button>
         </div>
 
-        <div id="game-over-screen" class="game-screen">
+        <div id="times-up-screen" class="game-screen">
             <h2>Tempo Esgotado!</h2>
             <p>O ladrão escapou e não deixou rastros. A polícia lamenta, mas o caso foi encerrado. Tente novamente!</p>
             <button id="restart-button-game-over" class="btn">Jogar Novamente</button>
         </div>
+
+        <div id="game-over-screen" class="game-screen">
+            <h2>Você pegou a pessoa errada!</h2>
+            <p>O ladrão escapou e não deixou rastros. A polícia lamenta, mas o caso foi encerrado. Tente novamente!</p>
+            <button id="restart-button-game-over" class="btn">Jogar Novamente</button>
+        </div>
     </div>
-    
+
     <script src="data/db.js"></script>
     <script src="script.js"></script>
 </body>
+
 </html>

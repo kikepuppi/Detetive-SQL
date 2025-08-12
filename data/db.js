@@ -37,7 +37,7 @@ const db = {
   // Tabela de Eventos (log de câmera, alibis, etc.)
   eventos: [
     { id: 1, pessoa_id: 2, local_id: 102, hora: "14:15", tipo: "palestra" },
-    { id: 2, pessoa_id: 5, local_id: 103, hora: "14:20", tipo: "compra de café" },
+    { id: 2, pessoa_id: 5, local_id: 101, hora: "14:27", tipo: "conversa com professor" },
     { id: 3, pessoa_id: 3, local_id: 101, hora: "14:00", tipo: "patrulha" },
     { id: 4, pessoa_id: 1, local_id: 101, hora: "14:25", tipo: "pesquisa" },
     { id: 5, pessoa_id: 6, local_id: 104, hora: "14:35", tipo: "entrevista" },
@@ -47,8 +47,9 @@ const db = {
     { id: 9, pessoa_id: 14, local_id: 101, hora: "14:29", tipo: "fazendo anotações" },
     { id: 10, pessoa_id: 12, local_id: 104, hora: "14:20", tipo: "exibição do robô" },
     { id: 11, pessoa_id: 10, local_id: 102, hora: "14:25", tipo: "conferindo o som" },
-    { id: 12, pessoa_id: 8, local_id: 101, hora: "14:32", tipo: "conversa com segurança" },
-    { id: 13, pessoa_id: 5, local_id: 101, hora: "14:34", tipo: "conversa com professor" }
+    { id: 12, pessoa_id: 8, local_id: 101, hora: "14:26", tipo: "conversa com segurança" },
+    { id: 13, pessoa_id: 5, local_id: 103, hora: "14:34", tipo: "compra de um café" },
+    { id: 14, pessoa_id: 8, local_id: 103, hora: "14:28", tipo: "compra de um salgado" }
   ],
   
   // Tabela de Históricos Profissionais (completa)
@@ -59,7 +60,7 @@ const db = {
     { id: 4, pessoa_id: 4, empresa: "Insper", cargo: "Pesquisadora" },
     { id: 5, pessoa_id: 5, empresa: "TechSolutions Inc.", cargo: "Engenheiro de Software" },
     { id: 6, pessoa_id: 6, empresa: "Jornal do Vale", cargo: "Repórter" },
-    { id: 7, pessoa_id: 7, empresa: "Innovatech Solutions", cargo: "Representante de Vendas" },
+    { id: 7, pessoa_id: 7, empresa: "Innovatech", cargo: "Representante de Vendas" },
     { id: 8, pessoa_id: 8, empresa: "Competidora", cargo: "Engenheira de Dados" },
     { id: 9, pessoa_id: 9, empresa: "None", cargo: "Estudante" },
     { id: 10, pessoa_id: 10, empresa: "Insper", cargo: "Organizadora de Eventos" },

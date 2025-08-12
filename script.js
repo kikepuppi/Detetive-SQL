@@ -6,9 +6,11 @@ const data = db;
 // Seletores de elementos da interface
 const startScreen = document.getElementById('start-screen');
 const tutorialScreen = document.getElementById('tutorial-screen');
+const storyScreen = document.getElementById('story-screen');
 const mainGameScreen = document.getElementById('main-game-screen');
 const victoryScreen = document.getElementById('victory-screen');
 const gameOverScreen = document.getElementById('game-over-screen');
+const timesUpScreen = document.getElementById('times-up-screen');
 const helpModal = document.getElementById('help-modal');
 const whereModal = document.getElementById('where-modal');
 const orderbyModal = document.getElementById('orderby-modal');
@@ -36,8 +38,9 @@ const resultsOutput = document.getElementById('results-output');
 const tutorialContent = document.getElementById('tutorial-content');
 const prevTutorialButton = document.getElementById('prev-tutorial-button');
 const nextTutorialButton = document.getElementById('next-tutorial-button');
-const startTutorialGameButton = document.getElementById('start-game-button');
+const startStoryButton = document.getElementById('start-story-button');
 const skipTutorialButton = document.getElementById('skip-tutorial-button');
+const startMainGameButton = document.getElementById('start-main-game-button');
 
 const whereInput = document.getElementById('where-input');
 const whereConfirmButton = document.getElementById('where-confirm');
@@ -49,7 +52,7 @@ const restartButtons = document.querySelectorAll('.btn[id^="restart-button"]');
 // Variáveis do jogo
 let timeLimit = 900; // 15 minutos em segundos
 let timerInterval;
-const correctAnswer = 'Guilherme Siqueira'; // O nome do ladrão
+const correctAnswer = 'João Silva'; // O nome do ladrão
 
 let currentQuery = {
     select: [],
@@ -122,7 +125,7 @@ function startTimer() {
 
         if (timeLeft <= 0) {
             clearInterval(timerInterval);
-            showScreen(gameOverScreen);
+            showScreen(timesUpScreen);
         }
     }, 1000);
 }
@@ -322,7 +325,7 @@ function renderTutorialStep(step) {
     tutorialContent.innerHTML = `<h3>${tutorialSteps[step].title}</h3>${tutorialSteps[step].content}`;
     prevTutorialButton.style.display = step === 0 ? 'none' : 'inline-block';
     nextTutorialButton.style.display = step === tutorialSteps.length - 1 ? 'none' : 'inline-block';
-    startTutorialGameButton.style.display = step === tutorialSteps.length - 1 ? 'inline-block' : 'none';
+    startStoryButton.style.display = step === tutorialSteps.length - 1 ? 'inline-block' : 'none';
     skipTutorialButton.style.display = step === tutorialSteps.length - 1 ? 'none' : 'inline-block';
 }
 
@@ -398,18 +401,20 @@ nextTutorialButton.addEventListener('click', () => {
 });
 
 skipTutorialButton.addEventListener('click', () => {
+    showScreen(storyScreen);
+});
+
+startStoryButton.addEventListener('click', () => {
+    showScreen(storyScreen);
+});
+
+startMainGameButton.addEventListener('click', () => {
     showScreen(mainGameScreen);
     renderTables();
     startTimer();
     renderQuery();
 });
 
-startTutorialGameButton.addEventListener('click', () => {
-    showScreen(mainGameScreen);
-    renderTables();
-    startTimer();
-    renderQuery();
-});
 
 helpButton.addEventListener('click', openHelpModal);
 closeModalButton.addEventListener('click', closeHelpModal);

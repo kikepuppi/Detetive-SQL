@@ -1,12 +1,12 @@
 /* style.css */
 
 :root {
-    --primary-color: #014F86; /* Azul médio para botões e destaques */
+    --primary-color: #0286e4; /* Azul médio para botões e destaques */
     --background-color: #000E19; /* Azul bem escuro para o fundo */
-    --card-background: #012A4A; /* Azul escuro para os painéis */
+    --card-background: #00477c; /* Azul escuro para os painéis */
     --text-color: #F5FDFF; /* Branco claro para o texto */
     --secondary-text-color: #C0E1EC; /* Azul claro para texto secundário */
-    --border-color: #013A63; /* Borda um pouco mais escura */
+    --border-color: #025fa2; /* Borda um pouco mais escura */
     --hover-color: #013A63; /* Cor para hover e fundo de listas */
 }
 
@@ -61,6 +61,16 @@ h2, h3, h4 {
     display: block;
 }
 
+.story-box {
+    text-align: left;
+    margin: 20px auto;
+    padding: 25px;
+    background-color: var(--hover-color);
+    border-radius: 8px;
+    max-width: 800px;
+    line-height: 1.6;
+}
+
 .instructions {
     text-align: left;
     margin: 20px auto;
@@ -84,12 +94,32 @@ h2, h3, h4 {
     margin-bottom: 20px;
 }
 
+.timer-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.timer-label {
+    font-weight: bold;
+    font-size: 1.2em;
+    margin: 0;
+    white-space: nowrap;
+}
+
+#timer {
+    font-size: 2em;
+    font-weight: bold;
+    color: var(--primary-color);
+    margin: 0;
+}
+
 .case-brief-container {
     background-color: var(--hover-color);
     padding: 10px;
     border-radius: 5px;
     flex-grow: 1;
-    margin-right: 20px;
+    margin: 0 20px;
     text-align: left;
 }
 
