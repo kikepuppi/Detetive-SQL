@@ -93,7 +93,7 @@ const tutorialSteps = [
 ];
 
 const helpContent = {
-    select: "<strong>SELECT</strong>: Escolhe quais colunas você quer ver. Ex: `SELECT nome`",
+    select: "<strong>SELECT</strong>: Escolhe quais colunas você quer ver. Ex: `SELECT nome`. Padrão `*` para selecionar todas as colunas.",
     from: "<strong>FROM</strong>: Indica de qual tabela você quer extrair os dados. Ex: `FROM pessoas`",
     where: "<strong>WHERE</strong>: Filtra os resultados com base em uma condição. Ex: `WHERE idade > 30`",
     and: "<strong>AND</strong>: Combina duas ou mais condições na cláusula WHERE. Ex: `WHERE idade > 30 AND ocupacao = 'Professor'`",
