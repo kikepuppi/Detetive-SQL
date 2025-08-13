@@ -325,7 +325,7 @@ h3 {
 
 #notes-input {
     width: 100%;
-    height: calc(100% - 30px);
+    height: 85%;
     border: 1px solid var(--border-color);
     border-radius: 5px;
     padding: 10px;
@@ -334,6 +334,7 @@ h3 {
     font-family: Arial, sans-serif;
     background-color: var(--hover-color);
     color: var(--text-color);
+    font-size: 13px;
 }
 
 .results-header {
@@ -517,4 +518,12 @@ h3 {
 
 #orderby-columns {
     margin-bottom: 1em;
+}
+
+.img_tutorial {
+    max-width: 50%;
+    height: auto;
+    margin: 10px 0;
+    border: 2px solid black;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
 }

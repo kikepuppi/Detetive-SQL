@@ -81,39 +81,30 @@ let tutorialStep = 0;
 const tutorialSteps = [
     {
         title: "Passo 1: O Objetivo",
-        content: "<p>Seu objetivo é usar o terminal para filtrar os dados da Expo Tech e encontrar o ladrão. Você tem 15 minutos para isso!</p>"
+        image: "assets/images/step1.png",
+        content: "<p>Seu objetivo é usar o comandos SQL para filtrar os dados da Expo Tech e encontrar o ladrão. Você tem 15 minutos para isso! O seu tempo é mostrado no topo da tela. Além disso, use e abuse dos <strong>botões do cabeçalho</strong>, para voltar ao contexto e obter informações importantes para resolver o caso! </p> "
     },
     {
         title: "Passo 2: Construindo a Consulta",
-        content: "<p>A área central é onde você constrói a sua consulta. Use os botões de comandos, tabelas e colunas para montar a sua busca. Por exemplo, clique em <strong>SELECT</strong>, depois em uma coluna da tabela e em <strong>FROM</strong>, seguido pelo nome da tabela.</p>"
+        image: "assets/images/step2.png",
+        content: "<p>A área central é onde você constrói a sua consulta. Use os botões de comandos, tabelas e colunas para montar a sua busca. A área da consulta não é digitável, mas você pode clicar nos elementos para adicioná-los à sua consulta. Por exemplo, clique no nome de uma tabela para adicioná-la à consulta e selecionar todas as suas colunas.</p>"
     },
     {
         title: "Passo 3: Tabelas e Colunas",
+        image: "assets/images/step3.png",
         content: "<p>À esquerda, na área <strong>Tabelas</strong>, estão os nomes das nossas tabelas de dados. Clique em um nome de tabela para que suas colunas apareçam à direita. Clique nas colunas para incluí-las na sua consulta.</p>"
     },
     {
-        title: "Passo 4: Botão de Ajuda",
-        content: "<p>O botão <button class='btn btn-help'>Ajuda</button> é o seu melhor amigo! Use-o sempre que tiver dúvidas sobre os comandos ou se precisar de uma dica para o caso.</p>"
+        title: "Passo 4: Executando e Anotando",
+        image: "assets/images/step4.png",
+        content: "<p>Após montar sua consulta, clique em <strong>Executar</strong> para ver os resultados. Use a área de <strong>Resultados</strong> para analisar as informações e a área de <strong>Anotações</strong> para registrar o que você descobrir. Você pode copiar os resultados da tabela diretamente para suas anotações, digitar, apagar e editar seus comentários.</p>"
     },
     {
-        title: "Passo 5: Executando e Anotando",
-        content: "<p>Após montar sua consulta, clique em <strong>Executar</strong> para ver os resultados. Use a área de <strong>Resultados</strong> para analisar as informações e a área de <strong>Anotações</strong> para registrar o que você descobrir. Agora, você pode copiar os resultados da tabela diretamente para suas anotações.</p>"
-    },
-    {
-        title: "Passo 6: A Resposta",
+        title: "Passo 5: A Resposta",
+        image: "assets/images/step5.png",
         content: "<p>Quando tiver certeza de quem é o ladrão, digite o nome completo dele no campo de resposta e clique em <strong>Enviar Resposta</strong>. Lembre-se, você tem apenas uma chance!</p>"
     }
 ];
-
-const helpContent = {
-    select: "<strong>SELECT</strong>: Escolhe quais colunas você quer ver. Ex: `SELECT nome`. Padrão `*` para selecionar todas as colunas.",
-    from: "<strong>FROM</strong>: Indica de qual tabela você quer extrair os dados. Ex: `FROM pessoas`",
-    where: "<strong>WHERE</strong>: Filtra os resultados com base em uma condição. Ex: `WHERE idade > 30`",
-    and: "<strong>AND</strong>: Combina duas ou mais condições na cláusula WHERE. Ex: `WHERE idade > 30 AND ocupacao = 'Professor'`",
-    orderBy: "<strong>ORDER BY</strong>: Ordena os resultados com base em uma coluna. Ex: `ORDER BY nome`",
-    asc: "<strong>ASC</strong>: Ordena os resultados de forma ascendente (crescente). É o padrão.",
-    desc: "<strong>DESC</strong>: Ordena os resultados de forma descendente (decrescente)."
-};
 
 const hints = [
     "Comece sua investigação buscando pelo id do local do crime. A tabela <strong>locais</strong> pode ser útil.",
@@ -179,6 +170,7 @@ function startTimer() {
     }, 1000);
 }
 
+// Substitua a sua função renderQuery por esta
 function renderQuery() {
     let queryText = '';
     
@@ -196,7 +188,8 @@ function renderQuery() {
 
     // Constrói a parte WHERE
     if (currentQuery.where.length > 0) {
-        queryText += ` WHERE ${currentQuery.where.join(' AND ')}`;
+        // ALTERAÇÃO: Trocamos .join(' AND ') por .join(' ') para ter controle manual do AND
+        queryText += ` WHERE ${currentQuery.where.join(' ')}`;
     }
 
     // Constrói a parte ORDER BY
@@ -391,7 +384,7 @@ function resetGame() {
 
 // Funções do Tutorial
 function renderTutorialStep(step) {
-    tutorialContent.innerHTML = `<h3>${tutorialSteps[step].title}</h3>${tutorialSteps[step].content}`;
+    tutorialContent.innerHTML = `<h3>${tutorialSteps[step].title}</h3><img src="${tutorialSteps[step].image}" alt="${tutorialSteps[step].title}" class="img_tutorial">${tutorialSteps[step].content}`;
     prevTutorialButton.style.display = step === 0 ? 'none' : 'inline-block';
     nextTutorialButton.style.display = step === tutorialSteps.length - 1 ? 'none' : 'inline-block';
     startStoryButton.style.display = step === tutorialSteps.length - 1 ? 'inline-block' : 'none';
@@ -579,6 +572,7 @@ document.getElementById('reveal-hint-2').addEventListener('click', () => revealH
 document.getElementById('reveal-hint-3').addEventListener('click', () => revealHint(3));
 
 
+// Substitua o seu event listener de keywordsButtons por este
 keywordsButtons.addEventListener('click', (event) => {
     if (event.target.classList.contains('keyword-btn')) {
         const keyword = event.target.dataset.keyword;
@@ -594,6 +588,9 @@ keywordsButtons.addEventListener('click', (event) => {
             if (currentQuery.orderBy) {
                 currentQuery.orderBy = currentQuery.orderBy.split(' ')[0] + ' DESC';
             }
+        } 
+        else if (keyword === 'AND') {
+            currentQuery.where.push('AND');
         }
         renderQuery();
     }
