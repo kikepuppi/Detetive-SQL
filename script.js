@@ -212,6 +212,7 @@ function renderTables() {
     for (const tableName in data) {
         const p = document.createElement('p');
         p.textContent = tableName.toUpperCase();
+        p.classList.add('table-item');
         p.dataset.tableName = tableName;
         p.addEventListener('click', () => {
             currentQuery.from = tableName;
