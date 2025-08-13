@@ -115,11 +115,24 @@ h3 {
 
 .header-game {
     display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
+    flex-direction: column; /* Altera para coluna para o timer ficar no centro */
+    align-items: center; /* Centraliza o conteúdo horizontalmente */
     border-bottom: 1px solid var(--border-color);
     padding-bottom: 10px;
     margin-bottom: 20px;
+}
+
+.header-actions {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    width: 100%; /* Ocupa a largura total para os botões */
+    margin-bottom: 10px; /* Espaço entre os botões e o timer */
+}
+
+.btn-header {
+    flex-grow: 1; /* Faz os botões ocuparem a largura disponível */
+    max-width: 250px;
 }
 
 .timer-container {
@@ -140,25 +153,6 @@ h3 {
     font-weight: bold;
     color: var(--primary-color);
     margin: 0;
-}
-
-.case-brief-container {
-    background-color: var(--hover-color);
-    padding: 10px;
-    border-radius: 5px;
-    flex-grow: 1;
-    margin: 0 20px;
-    text-align: left;
-}
-
-.case-brief-container h3 {
-    margin-top: 0;
-    margin-bottom: 5px;
-}
-
-#case-brief {
-    margin: 0;
-    color: var(--secondary-text-color);
 }
 
 .game-area {

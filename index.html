@@ -59,6 +59,30 @@
             <button id="start-explanation-button" class="btn">Próximo</button>
         </div>
 
+        <div id="story-screen2" class="game-screen">
+            <h2>O Caso: Roubo do "Quantum Core"</h2>
+            <div class="story-box">
+                <p>No coração do evento Expo Tech, a renomada empresa <strong>Innovatech</strong> exibia com orgulho o
+                    seu mais
+                    valioso protótipo: o chip <strong>"Quantum Core"</strong>. Um feito tecnológico que prometia
+                    revolucionar a
+                    indústria.</p>
+                <p>No entanto, a feira está repleta de interesses conflitantes. Diversos competidores e indivíduos com
+                    ambições pessoais estão de olho no projeto. Há rumores de engenheiros de software descontentes e até
+                    mesmo
+                    de uma organização rival, a TechSolutions Inc., que não mede esforços para ter uma vantagem
+                    competitiva.</p>
+                <p>O chip desapareceu do Laboratório de Robótica exatamente às 14:30. Laura Martins, uma jornalista,
+                    denunciou o crime. A Innovatech assegura que seus funcionários são leais e dedicaram anos de
+                    trabalho ao projeto, descartando qualquer envolvimento interno.</p>
+                <p> Além disso, o Insper divulgou uma nota, dizendo que nenhum aluno ou visitante estão envolvidos no
+                    caso.</p>
+                <p>Sua missão é investigar as movimentações de todos os participantes do evento e descobrir o verdadeiro
+                    culpado. O banco de dados da Expo Tech é sua única ferramenta, e o tempo está se esgotando.</p>
+            </div>
+            <button id="fechar-button" class="btn">Fechar</button>
+        </div>
+
         <div id="sql-explanation-screen" class="game-screen">
             <h2>Como Construir suas Consultas SQL</h2>
             <div class="text-box">
@@ -110,20 +134,68 @@
             <button id="start-main-game-button" class="btn">Começar Investigação!</button>
         </div>
 
+        <div id="sql-explanation-screen2" class="game-screen">
+            <h2>Como Construir suas Consultas SQL</h2>
+            <div class="text-box">
+                <p>Nesta plataforma, você usará a linguagem <strong>SQL</strong> para interrogar o banco de dados. Mas
+                    não se preocupe, a plataforma te ajuda!</p>
+                <p>Para construir suas consultas, você pode clicar nos nomes de <strong>Tabelas</strong>,
+                    <strong>Colunas</strong> e nos <strong>Comandos</strong>. A consulta será montada automaticamente
+                    para você no terminal. Cada comando tem uma função específica para te ajudar na investigação:
+                </p>
+            </div>
+
+            <h3>Comandos e Suas Funções:</h3>
+            <div class="explanation-box">
+                <p><strong>SELECT</strong>: Este é o comando principal. Ele escolhe quais colunas você quer ver na
+                    tabela de resultados. Você pode selecionar colunas específicas (ex: <code>nome</code>) ou usar
+                    <code>*</code> para selecionar todas as colunas.
+                </p>
+            </div>
+            <div class="explanation-box">
+                <p><strong>FROM</strong>: Indica de qual tabela você quer extrair os dados. É essencial para começar
+                    qualquer consulta.</p>
+            </div>
+            <div class="explanation-box">
+                <p><strong>WHERE</strong>: Permite filtrar os dados com base em uma condição. Por exemplo, se você quer
+                    ver apenas pessoas com mais de 30 anos, usaria <code>WHERE idade > 30</code>. O botão `WHERE` abrirá
+                    uma janela para você digitar sua condição.</p>
+            </div>
+            <div class="explanation-box">
+                <p><strong>AND</strong>: Conecta duas ou mais condições dentro de um comando <code>WHERE</code>. É útil
+                    para buscas mais precisas. Ex: <code>WHERE idade > 30 AND ocupacao = 'Professor'</code>.</p>
+            </div>
+            <div class="explanation-box">
+                <p><strong>ORDER BY</strong>: Ordena os resultados da sua consulta em ordem alfabética, numérica ou
+                    cronológica, com base em uma coluna. Ex: <code>ORDER BY nome</code>.</p>
+            </div>
+            <div class="explanation-box">
+                <p><strong>ASC</strong>: Adicionado ao <code>ORDER BY</code>, ordena os resultados em ordem ascendente
+                    (crescente). É o padrão, então nem sempre precisa ser usado.</p>
+            </div>
+            <div class="explanation-box">
+                <p><strong>DESC</strong>: Adicionado ao <code>ORDER BY</code>, ordena os resultados em ordem descendente
+                    (decrescente).</p>
+            </div>
+
+            <div class="text-box">
+                <p>Para começar, clique em `SELECT *` e em seguida na tabela que quer analisar. Depois, use os outros
+                    comandos para refinar sua busca!</p>
+            </div>
+            <button id="fechar-button2" class="btn">Fechar</button>
+        </div>
+
         <div id="main-game-screen" class="game-screen">
             <div class="header-game">
+                <div class="header-actions">
+                    <button id="context-button" class="btn btn-header">Contexto</button>
+                    <button id="commands-button" class="btn btn-header">Comandos</button>
+                    <button id="hints-button" class="btn btn-header">Dicas</button>
+                </div>
                 <div class="timer-container">
                     <p class="timer-label">Tempo</p>
                     <p id="timer">15:00</p>
                 </div>
-                <div class="case-brief-container">
-                    <h3>Detalhes do Caso</h3>
-                    <p id="case-brief">O roubo do protótipo 'Quantum Core', da empresa Innovatech, ocorreu no
-                        Laboratório de Robótica às 14:30. A área estava lotada. O criminoso pode ter se misturado à
-                        multidão. Os suspeitos incluem funcionarios da empresa rival (TechSolutions Inc.) e Engenheiros
-                        de Software descontentes.</p>
-                </div>
-                <button id="help-button" class="btn btn-help">Ajuda</button>
             </div>
 
             <div class="game-area">
@@ -188,12 +260,10 @@
         <div id="help-modal" class="modal">
             <div class="modal-content">
                 <span class="close-button">&times;</span>
-                <h3>Ajuda do SQL Detective</h3>
+                <h3>Dicas</h3>
                 <div id="help-content">
-                    <h4>Comandos</h4>
                     <div id="command-help">
                     </div>
-                    <h4>Dicas</h4>
                     <div id="hint-area">
                         <button id="reveal-hint-1" class="btn btn-hint">Revelar Dica 1</button>
                         <p id="hint-1-text" class="hidden-hint"></p>

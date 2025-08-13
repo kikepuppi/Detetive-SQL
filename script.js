@@ -7,7 +7,9 @@ const data = db;
 const startScreen = document.getElementById('start-screen');
 const tutorialScreen = document.getElementById('tutorial-screen');
 const storyScreen = document.getElementById('story-screen');
+const storyScreen2 = document.getElementById('story-screen2');
 const sqlExplanationScreen = document.getElementById('sql-explanation-screen');
+const sqlExplanationScreen2 = document.getElementById('sql-explanation-screen2');
 const mainGameScreen = document.getElementById('main-game-screen');
 const victoryScreen = document.getElementById('victory-screen');
 const gameOverScreen = document.getElementById('game-over-screen');
@@ -19,10 +21,12 @@ const columnInfoModal = document.getElementById('column-info-modal');
 
 const startTutorialButton = document.getElementById('start-tutorial-button');
 const timerElement = document.getElementById('timer');
-const helpButton = document.getElementById('help-button');
+const helpButton = document.getElementById('help-button'); // Mantido para compatibilidade, mas não mais usado no HTML principal
 const closeModalButton = document.querySelector('.close-button');
 const whereCloseButton = document.querySelector('.where-close');
 const orderbyCloseButton = document.querySelector('.orderby-close');
+const fecharButton = document.getElementById('fechar-button');
+const fecharButton2 = document.getElementById('fechar-button2');
 
 const queryOutput = document.getElementById('query-output');
 const executeQueryButton = document.getElementById('execute-query-button');
@@ -51,6 +55,12 @@ const orderbyInput = document.getElementById('orderby-input');
 const orderbyConfirmButton = document.getElementById('orderby-confirm');
 
 const restartButtons = document.querySelectorAll('.btn[id^="restart-button"]');
+
+// Novos seletores para os botões do header
+const contextButton = document.getElementById('context-button');
+const commandsButton = document.getElementById('commands-button');
+const hintsButton = document.getElementById('hints-button');
+
 
 // Variáveis do jogo
 let timeLimit = 900; // 15 minutos em segundos
@@ -373,6 +383,7 @@ function resetGame() {
     showScreen(startScreen);
     timerElement.textContent = '15:00';
     hintsRevealed = [];
+    // Resetar o estado dos botões de dica
     document.querySelectorAll('.btn-hint').forEach(btn => btn.disabled = false);
     document.querySelectorAll('.hidden-hint').forEach(hint => hint.style.display = 'none');
 }
@@ -389,15 +400,6 @@ function renderTutorialStep(step) {
 // Funções do Ajuda
 function openHelpModal() {
     const commandHelpDiv = document.getElementById('command-help');
-    commandHelpDiv.innerHTML = `
-        <p>${helpContent.select}</p>
-        <p>${helpContent.from}</p>
-        <p>${helpContent.where}</p>
-        <p>${helpContent.and}</p>
-        <p>${helpContent.orderBy}</p>
-        <p>${helpContent.asc}</p>
-        <p>${helpContent.desc}</p>
-    `;
     helpModal.style.display = 'block';
 }
 
@@ -526,6 +528,16 @@ startExplanationButton.addEventListener('click', () => {
     showScreen(sqlExplanationScreen);
 });
 
+fecharButton.addEventListener('click', () => {
+    showScreen(mainGameScreen);
+    window.scrollTo(0, 0);
+});
+
+fecharButton2.addEventListener('click', () => {
+    showScreen(mainGameScreen);
+    window.scrollTo(0, 0);
+});
+
 startMainGameButton.addEventListener('click', () => {
     showScreen(mainGameScreen);
     renderTables();
@@ -534,7 +546,18 @@ startMainGameButton.addEventListener('click', () => {
     window.scrollTo(0, 0);
 });
 
-helpButton.addEventListener('click', openHelpModal);
+// Event listeners para os novos botões do header
+contextButton.addEventListener('click', () => {
+    showScreen(storyScreen2);
+});
+
+commandsButton.addEventListener('click', () => {
+    showScreen(sqlExplanationScreen2);
+});
+
+hintsButton.addEventListener('click', openHelpModal); // O botão de dicas abrirá o modal de ajuda
+
+// helpButton.addEventListener('click', openHelpModal); // Este botão foi removido do HTML principal
 closeModalButton.addEventListener('click', closeHelpModal);
 window.addEventListener('click', (event) => {
     if (event.target == helpModal || event.target == whereModal || event.target == orderbyModal) {
