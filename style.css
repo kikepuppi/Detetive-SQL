@@ -8,6 +8,7 @@
     --secondary-text-color: #C0E1EC; /* Azul claro para texto secundário */
     --border-color: #025fa2; /* Borda um pouco mais escura */
     --hover-color: #013A63; /* Cor para hover e fundo de listas */
+    --explanation-box-color: #012A4A; /* Cor mais clara para as caixas de explicação */
 }
 
 body {
@@ -73,6 +74,29 @@ h3 {
     border-radius: 8px;
     max-width: 800px;
     line-height: 1.6;
+}
+
+/* Estilo para as caixas de explicação */
+.explanation-box {
+    text-align: left;
+    margin: 15px auto;
+    padding: 15px;
+    background-color: var(--explanation-box-color);
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    max-width: 800px;
+}
+
+.text-box {
+    text-align: left;
+    margin: 15px auto;
+    padding: 15px;
+    max-width: 800px;
+}
+
+.text-box p {
+    margin: 5px 0;
+    line-height: 1.5;
 }
 
 .instructions {
@@ -201,21 +225,63 @@ h3 {
     background-color: var(--hover-color);
 }
 
+/* Removido o overflow e ajustado a altura para caber todas as colunas */
 .interactive-list {
-    max-height: 150px;
-    overflow-y: auto;
+    max-height: none;
+    overflow-y: hidden;
 }
 
-.interactive-list p, .interactive-list span {
-    margin: 5px 0;
-    padding: 5px;
+/* Alterando o layout das colunas para vertical */
+.columns-list-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.column-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 4px;
     border-radius: 3px;
-    cursor: pointer;
+    background-color: #013A63;
 }
 
-.interactive-list p:hover, .interactive-list span:hover {
+/* Ação de hover no nome da coluna */
+.column-name {
+    flex-grow: 1;
+    cursor: pointer;
+    padding: 5px;
+}
+
+.column-name:hover {
     background-color: var(--primary-color);
     color: white;
+}
+
+/* Botão da lupa agora tem um estilo próprio */
+.column-info-btn {
+    background: none;
+    border: none;
+    padding: 5px;
+    cursor: pointer;
+    margin-left: auto; /* Alinha o botão à direita */
+}
+
+.column-info-btn:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+}
+
+.column-info-btn img {
+    width: 16px;
+    height: 16px;
+    filter: invert(1);
+    opacity: 0.7;
+    transition: opacity 0.3s;
+}
+
+.column-info-btn:hover img {
+    opacity: 1;
 }
 
 .keywords-grid {
@@ -359,7 +425,7 @@ h3 {
 .modal-input {
     width: calc(100% - 22px);
     padding: 10px;
-    margin-top: 10px;
+    margin-bottom: 10px;
     border: 1px solid var(--border-color);
     border-radius: 5px;
     font-size: 1em;
@@ -391,4 +457,43 @@ h3 {
     background-color: var(--hover-color);
     border-radius: 5px;
     border: 1px dashed var(--secondary-text-color);
+}
+
+/* Novo popup para informações de coluna */
+#column-info-modal {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 200; /* Garante que o popup fique acima de outros modais */
+}
+
+#column-info-modal .modal-content {
+    background-color: var(--card-background);
+    color: var(--text-color);
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    width: 300px;
+}
+
+#column-info-modal h4 {
+    margin-top: 0;
+    border-bottom: 1px solid var(--primary-color);
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+}
+
+#column-info-modal p {
+    margin: 0;
+    line-height: 1.4;
+}
+
+#info-close-btn {
+    margin-top: -0.25em;
 }

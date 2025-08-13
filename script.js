@@ -7,6 +7,7 @@ const data = db;
 const startScreen = document.getElementById('start-screen');
 const tutorialScreen = document.getElementById('tutorial-screen');
 const storyScreen = document.getElementById('story-screen');
+const sqlExplanationScreen = document.getElementById('sql-explanation-screen');
 const mainGameScreen = document.getElementById('main-game-screen');
 const victoryScreen = document.getElementById('victory-screen');
 const gameOverScreen = document.getElementById('game-over-screen');
@@ -14,6 +15,7 @@ const timesUpScreen = document.getElementById('times-up-screen');
 const helpModal = document.getElementById('help-modal');
 const whereModal = document.getElementById('where-modal');
 const orderbyModal = document.getElementById('orderby-modal');
+const columnInfoModal = document.getElementById('column-info-modal');
 
 const startTutorialButton = document.getElementById('start-tutorial-button');
 const timerElement = document.getElementById('timer');
@@ -40,6 +42,7 @@ const prevTutorialButton = document.getElementById('prev-tutorial-button');
 const nextTutorialButton = document.getElementById('next-tutorial-button');
 const startStoryButton = document.getElementById('start-story-button');
 const skipTutorialButton = document.getElementById('skip-tutorial-button');
+const startExplanationButton = document.getElementById('start-explanation-button');
 const startMainGameButton = document.getElementById('start-main-game-button');
 
 const whereInput = document.getElementById('where-input');
@@ -108,6 +111,42 @@ const hints = [
     "Analise os históricos na tabela <strong>históricos</strong>. Quem são os prováveis suspeitos? Quais os eventos associados a eles?"
 ];
 let hintsRevealed = []; // Array para rastrear dicas reveladas
+
+// Descrições das colunas para o novo popup
+const columnDescriptions = {
+    pessoas: {
+        id: "O ID único de cada pessoa.",
+        nome: "O nome completo da pessoa.",
+        ocupacao: "O cargo ou função da pessoa no evento.",
+        idade: "A idade da pessoa.",
+        localizacao_atual: "O ID do local onde a pessoa está no momento."
+    },
+    locais: {
+        id: "O ID único de cada local.",
+        nome: "O nome do local.",
+        capacidade: "A capacidade máxima de pessoas no local.",
+        descricao: "Uma descrição detalhada do local."
+    },
+    crimes: {
+        id: "O ID único do crime.",
+        descricao: "Detalhes do crime cometido.",
+        local_id: "O ID do local onde o crime ocorreu.",
+        hora_do_crime: "O horário exato do crime."
+    },
+    eventos: {
+        id: "O ID único do evento.",
+        pessoa_id: "O ID da pessoa envolvida no evento.",
+        local_id: "O ID do local onde o evento ocorreu.",
+        hora: "O horário do evento.",
+        tipo: "O tipo de evento (ex: palestra, conversa, compra)."
+    },
+    historicos: {
+        id: "O ID único do histórico.",
+        pessoa_id: "O ID da pessoa a quem o histórico pertence.",
+        empresa: "A empresa ou organização da pessoa.",
+        cargo: "O cargo da pessoa."
+    }
+};
 
 // Funções do jogo
 function showScreen(screen) {
@@ -178,16 +217,33 @@ function renderColumns(tableName) {
     if (data[tableName] && data[tableName].length > 0) {
         const columns = Object.keys(data[tableName][0]);
         columns.forEach(col => {
+            const div = document.createElement('div');
+            div.classList.add('column-item');
+            
             const span = document.createElement('span');
+            span.classList.add('column-name');
             span.textContent = col;
             span.dataset.columnName = col;
-            span.addEventListener('click', () => {
-                if (!currentQuery.select.includes(col)) {
-                    currentQuery.select.push(col);
+            span.addEventListener('click', (event) => {
+                if (!currentQuery.select.includes(event.target.dataset.columnName)) {
+                    currentQuery.select.push(event.target.dataset.columnName);
                 }
                 renderQuery();
             });
-            columnsList.appendChild(span);
+
+            const infoButton = document.createElement('button');
+            infoButton.classList.add('column-info-btn');
+            const img = document.createElement('img');
+            img.src = 'assets/images/lupa.png';
+            infoButton.appendChild(img);
+            infoButton.addEventListener('click', (event) => {
+                showColumnInfo(tableName, col);
+                event.stopPropagation();
+            });
+
+            div.appendChild(span);
+            div.appendChild(infoButton);
+            columnsList.appendChild(div);
         });
     }
 }
@@ -378,6 +434,22 @@ function copyResultsToNotes() {
     notesInput.scrollTop = notesInput.scrollHeight;
 }
 
+// Funções do novo popup de informações da coluna
+function showColumnInfo(tableName, columnName) {
+    const modalContent = columnInfoModal.querySelector('.modal-content');
+    modalContent.innerHTML = `
+        <span class="close-button" id="info-close-btn">&times;</span>
+        <h4>${columnName.toUpperCase()}</h4>
+        <p>${columnDescriptions[tableName][columnName]}</p>
+    `;
+    columnInfoModal.style.display = 'flex';
+    document.getElementById('info-close-btn').addEventListener('click', hideColumnInfo);
+}
+
+function hideColumnInfo() {
+    columnInfoModal.style.display = 'none';
+}
+
 
 // Event Listeners
 startTutorialButton.addEventListener('click', () => {
@@ -408,13 +480,17 @@ startStoryButton.addEventListener('click', () => {
     showScreen(storyScreen);
 });
 
+startExplanationButton.addEventListener('click', () => {
+    showScreen(sqlExplanationScreen);
+});
+
 startMainGameButton.addEventListener('click', () => {
     showScreen(mainGameScreen);
     renderTables();
     startTimer();
     renderQuery();
+    window.scrollTo(0, 0);
 });
-
 
 helpButton.addEventListener('click', openHelpModal);
 closeModalButton.addEventListener('click', closeHelpModal);
@@ -425,6 +501,11 @@ window.addEventListener('click', (event) => {
 });
 whereCloseButton.addEventListener('click', () => whereModal.style.display = 'none');
 orderbyCloseButton.addEventListener('click', () => orderbyModal.style.display = 'none');
+document.addEventListener('click', (event) => {
+    if (event.target === columnInfoModal) {
+        hideColumnInfo();
+    }
+});
 
 
 document.getElementById('reveal-hint-1').addEventListener('click', () => revealHint(1));

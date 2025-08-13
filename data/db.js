@@ -4,20 +4,20 @@ const db = {
   
   // Tabela de Pessoas (expandida)
   pessoas: [
-    { id: 1, nome: "Ana Santos", ocupacao: "Estudante de Engenharia", idade: 21, localizacao_atual: 101 },
-    { id: 2, nome: "Bruno Costa", ocupacao: "Professor de Eletrônica", idade: 35, localizacao_atual: 102 },
-    { id: 3, nome: "Carlos Lima", ocupacao: "Segurança do Evento", idade: 45, localizacao_atual: 101 },
-    { id: 4, nome: "Mariana Alves", ocupacao: "Aluna de Pós-Graduação", idade: 25, localizacao_atual: 101 },
-    { id: 5, nome: "João Silva", ocupacao: "Ex-aluno e Competidor", idade: 30, localizacao_atual: 103 },
-    { id: 6, nome: "Fernanda Ribeiro", ocupacao: "Repórter de Tecnologia", idade: 28, localizacao_atual: 104 },
-    { id: 7, nome: "Guilherme Siqueira", ocupacao: "Representante Innovatech", idade: 40, localizacao_atual: 101 },
-    { id: 8, nome: "Isabela Cardoso", ocupacao: "Engenheira de Dados", idade: 22, localizacao_atual: 101 },
-    { id: 9, nome: "Pedro Rocha", ocupacao: "Estudante de Computação", idade: 20, localizacao_atual: 103 },
-    { id: 10, nome: "Juliana Mendes", ocupacao: "Organizadora do Evento", idade: 32, localizacao_atual: 102 },
-    { id: 11, nome: "Rafael Souza", ocupacao: "Curioso", idade: 18, localizacao_atual: 101 },
-    { id: 12, nome: "Patrícia Gomes", ocupacao: "Estudante de Robótica", idade: 21, localizacao_atual: 104 },
-    { id: 13, nome: "Daniel Oliveira", ocupacao: "Convidado Especial", idade: 50, localizacao_atual: 103 },
-    { id: 14, nome: "Laura Martins", ocupacao: "Jornalista Freelancer", idade: 26, localizacao_atual: 101 }
+    { id: 1, nome: "Ana Santos", ocupacao: "Estudante de Engenharia", idade: 21 },
+    { id: 2, nome: "Bruno Costa", ocupacao: "Professor de Eletrônica", idade: 35 },
+    { id: 3, nome: "Carlos Lima", ocupacao: "Segurança do Evento", idade: 45 },
+    { id: 4, nome: "Mariana Alves", ocupacao: "Aluna de Pós-Graduação", idade: 25 },
+    { id: 5, nome: "João Silva", ocupacao: "Ex-aluno e Competidor", idade: 30 },
+    { id: 6, nome: "Fernanda Ribeiro", ocupacao: "Repórter de Tecnologia", idade: 28 },
+    { id: 7, nome: "Guilherme Siqueira", ocupacao: "Representante Innovatech", idade: 40 },
+    { id: 8, nome: "Isabela Cardoso", ocupacao: "Engenheira de Dados", idade: 22 },
+    { id: 9, nome: "Pedro Rocha", ocupacao: "Estudante de Computação", idade: 20 },
+    { id: 10, nome: "Juliana Mendes", ocupacao: "Organizadora do Evento", idade: 32 },
+    { id: 11, nome: "Rafael Souza", ocupacao: "Curioso", idade: 18 },
+    { id: 12, nome: "Patrícia Gomes", ocupacao: "Estudante de Robótica", idade: 21 },
+    { id: 13, nome: "Daniel Oliveira", ocupacao: "Convidado Especial", idade: 50 },
+    { id: 14, nome: "Laura Martins", ocupacao: "Jornalista Freelancer", idade: 26 }
   ],
   
   // Tabela de Locais (alguns para não ficar demais)
