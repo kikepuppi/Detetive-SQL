@@ -207,6 +207,7 @@ function renderTables() {
             currentQuery.from = tableName;
             renderQuery();
             renderColumns(tableName);
+            updateModalButtons(tableName); // Nova chamada para atualizar os botões dos modais
         });
         tablesList.appendChild(p);
     }
@@ -450,6 +451,47 @@ function hideColumnInfo() {
     columnInfoModal.style.display = 'none';
 }
 
+// Função para atualizar os botões de colunas nos modais
+function updateModalButtons(tableName) {
+    const whereColumnsContainer = document.getElementById('where-columns');
+    const orderbyColumnsContainer = document.getElementById('orderby-columns');
+
+    // Limpa os containers existentes, mas mantém o título "Colunas:"
+    whereColumnsContainer.innerHTML = '<h4>Colunas:</h4>';
+    orderbyColumnsContainer.innerHTML = '<h4>Colunas:</h4>';
+
+    if (data[tableName] && data[tableName].length > 0) {
+        const columns = Object.keys(data[tableName][0]);
+        columns.forEach(col => {
+            // Botões para o modal WHERE
+            const whereBtn = document.createElement('button');
+            whereBtn.classList.add('btn', 'btn-column');
+            whereBtn.textContent = col;
+            whereBtn.addEventListener('click', () => {
+                // Remove o nome da coluna anterior, mas mantém o operador
+                let currentValue = whereInput.value.trim();
+                const operators = ['=', '>', '<', 'IN']; // Adicione outros operadores se necessário
+                const lastOperatorIndex = Math.max(...operators.map(op => currentValue.lastIndexOf(op)));
+
+                if (lastOperatorIndex > -1) {
+                    whereInput.value = currentValue.substring(0, lastOperatorIndex + operators[0].length) + ' ' + col + ' ';
+                } else {
+                    whereInput.value = col + ' ';
+                }
+            });
+            whereColumnsContainer.appendChild(whereBtn);
+
+            // Botões para o modal ORDER BY
+            const orderbyBtn = document.createElement('button');
+            orderbyBtn.classList.add('btn', 'btn-column');
+            orderbyBtn.textContent = col;
+            orderbyBtn.addEventListener('click', () => {
+                orderbyInput.value = col; // Simplesmente substitui o valor
+            });
+            orderbyColumnsContainer.appendChild(orderbyBtn);
+        });
+    }
+}
 
 // Event Listeners
 startTutorialButton.addEventListener('click', () => {
@@ -561,4 +603,21 @@ submitAnswerButton.addEventListener('click', handleSubmitAnswer);
 
 restartButtons.forEach(button => {
     button.addEventListener('click', resetGame);
+});
+
+// Event Listener para os botões de operadores do WHERE
+document.getElementById('where-operators').addEventListener('click', (event) => {
+    if (event.target.classList.contains('btn-operator')) {
+        const operator = event.target.dataset.value;
+        const currentValue = whereInput.value.trim();
+        const parts = currentValue.split(/\s+/);
+        
+        // Verifica se já tem uma coluna na caixa de texto
+        if (parts.length === 1 && parts[0] !== '') {
+            whereInput.value = `${parts[0]} ${operator} `;
+        } else {
+            // Se não tiver coluna, ou se já tiver um operador, simplesmente adiciona o operador
+            whereInput.value = currentValue + ` ${operator} `;
+        }
+    }
 });

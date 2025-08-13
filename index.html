@@ -66,14 +66,16 @@
                     não se preocupe, a plataforma te ajuda!</p>
                 <p>Para construir suas consultas, você pode clicar nos nomes de <strong>Tabelas</strong>,
                     <strong>Colunas</strong> e nos <strong>Comandos</strong>. A consulta será montada automaticamente
-                    para você no terminal. Cada comando tem uma função específica para te ajudar na investigação:</p>
+                    para você no terminal. Cada comando tem uma função específica para te ajudar na investigação:
+                </p>
             </div>
 
             <h3>Comandos e Suas Funções:</h3>
             <div class="explanation-box">
                 <p><strong>SELECT</strong>: Este é o comando principal. Ele escolhe quais colunas você quer ver na
                     tabela de resultados. Você pode selecionar colunas específicas (ex: <code>nome</code>) ou usar
-                    <code>*</code> para selecionar todas as colunas.</p>
+                    <code>*</code> para selecionar todas as colunas.
+                </p>
             </div>
             <div class="explanation-box">
                 <p><strong>FROM</strong>: Indica de qual tabela você quer extrair os dados. É essencial para começar
@@ -208,9 +210,22 @@
             <div class="modal-content">
                 <span class="close-button where-close">&times;</span>
                 <h3>Adicionar Condição (WHERE)</h3>
-                <p>Digite a condição. Ex: <strong>id = 7</strong> ou <strong>nome = 'Guilherme Siqueira'</strong></p>
+                <p>Clique nas colunas e operadores para montar a condição.</p>
                 <input type="text" id="where-input" class="modal-input"
                     placeholder="Ex: ocupacao = 'Representante Innovatech'">
+
+                <div class="modal-actions">
+                    <div id="where-columns" class="modal-buttons-container">
+                        <h4>Colunas:</h4>
+                    </div>
+                    <div id="where-operators" class="modal-buttons-container">
+                        <h4>Operadores:</h4>
+                        <button class="btn btn-operator" data-value="=">=</button>
+                        <button class="btn btn-operator" data-value=">">></button>
+                        <button class="btn btn-operator" data-value="<"><</button>
+                    </div>
+                </div>
+
                 <button id="where-confirm" class="btn">Adicionar</button>
             </div>
         </div>
@@ -219,8 +234,15 @@
             <div class="modal-content">
                 <span class="close-button orderby-close">&times;</span>
                 <h3>Adicionar Ordenação (ORDER BY)</h3>
-                <p>Digite a coluna para ordenar.</p>
+                <p>Clique na coluna para ordenar.</p>
                 <input type="text" id="orderby-input" class="modal-input" placeholder="Ex: nome">
+
+                <div class="modal-actions">
+                    <div id="orderby-columns" class="modal-buttons-container">
+                        <h4>Colunas:</h4>
+                    </div>
+                </div>
+
                 <button id="orderby-confirm" class="btn">Adicionar</button>
             </div>
         </div>
