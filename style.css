@@ -133,6 +133,7 @@ h3 {
 .btn-header {
     flex-grow: 1; /* Faz os botões ocuparem a largura disponível */
     max-width: 250px;
+    font-weight: bold;
 }
 
 .timer-container {
@@ -490,4 +491,19 @@ h3 {
 
 #info-close-btn {
     margin-top: -0.25em;
+}
+
+.btn-column {
+    margin-right: 0.5em;
+    margin-top: -0.5em;
+}
+
+.btn-operator {
+    margin-right: 0.25em;
+    margin-bottom: 1em;
+    margin-top: -0.5em;
+}
+
+#orderby-columns {
+    margin-bottom: 1em;
 }
