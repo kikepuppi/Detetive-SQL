@@ -109,7 +109,7 @@ const tutorialSteps = [
 const hints = [
     "Comece sua investigação buscando pelo id do local do crime. A tabela <strong>locais</strong> pode ser útil.",
     "O ladrão estava no local próximo às 14:30. Busque na tabela <strong>eventos</strong> por pessoas que estavam no local 101, perto deste horário.",
-    "Analise os históricos na tabela <strong>históricos</strong>. Quem são os prováveis suspeitos? Quais os eventos associados a eles?"
+    "Analise os históricos na tabela <strong>históricos</strong>. Quem são os prováveis suspeitos? Onde eles estavam na hora do crime?"
 ];
 let hintsRevealed = []; // Array para rastrear dicas reveladas
 
