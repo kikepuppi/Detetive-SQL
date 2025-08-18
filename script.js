@@ -113,6 +113,14 @@ const hints = [
 ];
 let hintsRevealed = []; // Array para rastrear dicas reveladas
 
+const tableDescriptions = {
+    pessoas: "Contém informações sobre todas as pessoas registradas no evento, como nome, ocupação, idade e sua localização atual.",
+    locais: "Lista todos os locais do evento, como estandes e laboratórios, incluindo sua capacidade e descrição.",
+    crimes: "Registra os detalhes do crime que ocorreu, incluindo a descrição, o local e o horário exato.",
+    eventos: "Um log de todas as atividades que ocorreram, registrando quem (pessoa_id) esteve onde (local_id) e quando (hora).",
+    historicos: "Fornece o histórico profissional das pessoas, como a empresa em que trabalham e o cargo que ocupam."
+};
+
 // Descrições das colunas para o novo popup
 const columnDescriptions = {
     pessoas: {
@@ -170,7 +178,6 @@ function startTimer() {
     }, 1000);
 }
 
-// Substitua a sua função renderQuery por esta
 function renderQuery() {
     let queryText = '';
     
@@ -188,7 +195,6 @@ function renderQuery() {
 
     // Constrói a parte WHERE
     if (currentQuery.where.length > 0) {
-        // ALTERAÇÃO: Trocamos .join(' AND ') por .join(' ') para ter controle manual do AND
         queryText += ` WHERE ${currentQuery.where.join(' ')}`;
     }
 
@@ -197,23 +203,43 @@ function renderQuery() {
         queryText += ` ORDER BY ${currentQuery.orderBy}`;
     }
 
-    queryOutput.textContent = queryText;
+    // Alvo da mudança: usar .value para a textarea
+    queryOutput.value = queryText;
 }
 
 function renderTables() {
     tablesList.innerHTML = '';
     for (const tableName in data) {
-        const p = document.createElement('p');
-        p.textContent = tableName.toUpperCase();
-        p.classList.add('table-item');
-        p.dataset.tableName = tableName;
-        p.addEventListener('click', () => {
+        // Cria um container para o nome e o botão de info
+        const div = document.createElement('div');
+        div.classList.add('table-item-container');
+
+        // Cria o span com o nome da tabela
+        const span = document.createElement('span');
+        span.textContent = tableName.toUpperCase();
+        span.classList.add('table-name');
+        span.dataset.tableName = tableName;
+        span.addEventListener('click', () => {
             currentQuery.from = tableName;
             renderQuery();
             renderColumns(tableName);
-            updateModalButtons(tableName); // Nova chamada para atualizar os botões dos modais
+            updateModalButtons(tableName);
         });
-        tablesList.appendChild(p);
+
+        // Cria o botão de informação (lupa)
+        const infoButton = document.createElement('button');
+        infoButton.classList.add('table-info-btn');
+        const img = document.createElement('img');
+        img.src = 'assets/images/lupa.png';
+        infoButton.appendChild(img);
+        infoButton.addEventListener('click', (event) => {
+            showTableInfo(tableName);
+            event.stopPropagation(); // Impede que o clique no botão selecione a tabela
+        });
+
+        div.appendChild(span);
+        div.appendChild(infoButton);
+        tablesList.appendChild(div);
     }
 }
 
@@ -255,67 +281,88 @@ function renderColumns(tableName) {
 
 function clearQuery() {
     currentQuery = { select: [], from: '', where: [], orderBy: '' };
-    queryOutput.textContent = 'Sua consulta será exibida aqui...';
+    queryOutput.value = 'Sua consulta será exibida aqui...';
     columnsList.innerHTML = '';
     resultsOutput.innerHTML = '';
 }
 
 function executeQuery() {
+    const queryText = queryOutput.value.trim();
     let results = [];
-    const fromTable = currentQuery.from;
-    const selectColumns = currentQuery.select;
-    const whereClauses = currentQuery.where;
-    const orderByClause = currentQuery.orderBy;
 
-    if (!fromTable) {
-        resultsOutput.innerHTML = '<p class="error-message">Selecione uma tabela com FROM primeiro.</p>';
+    // Encontra o nome da tabela com uma expressão regular
+    const fromMatch = queryText.match(/FROM\s+(\w+)/i);
+    if (!fromMatch) {
+        resultsOutput.innerHTML = '<p class="error-message">Consulta inválida. Não foi possível encontrar a cláusula FROM.</p>';
         return;
     }
+    const fromTable = fromMatch[1];
     
-    results = data[fromTable];
+    if (!data[fromTable]) {
+        resultsOutput.innerHTML = `<p class="error-message">Tabela "${fromTable}" não encontrada.</p>`;
+        return;
+    }
+    results = [...data[fromTable]];
 
-    if (whereClauses.length > 0) {
-        whereClauses.forEach(clause => {
-            const parts = clause.split(' ').map(s => s.trim());
-            const column = parts[0];
-            const operator = parts[1];
-            const valuePart = parts.slice(2).join(' ');
+    // Filtra os resultados com base na cláusula WHERE
+    const whereMatch = queryText.match(/WHERE\s+(.*?)(?:\s+ORDER BY|$)/i);
+    if (whereMatch) {
+        const whereClause = whereMatch[1];
+        const conditions = whereClause.split(/\s+AND\s+/i);
 
-            if (operator.toUpperCase() === 'IN') {
-                const values = valuePart.replace(/[\(\)']/g, '').split(',').map(v => v.trim());
-                results = results.filter(row => values.includes(String(row[column.toLowerCase()])));
-            } else {
-                const value = valuePart;
-                results = results.filter(row => {
-                    const rowValue = row[column.toLowerCase()];
-                    if (operator === '=') return String(rowValue) === value.replace(/['"]/g, '');
-                    if (operator === '>') return rowValue > value;
-                    if (operator === '<') return rowValue < value;
-                    return true;
-                });
-            }
+        results = results.filter(row => {
+            return conditions.every(condition => {
+                const parts = condition.match(/(.*?)\s*(=|>|<)\s*(.*)/);
+                if (!parts) return true;
+
+                const column = parts[1].trim();
+                const operator = parts[2].trim();
+                const value = parts[3].trim().replace(/['"]/g, '');
+
+                if (row[column] === undefined) return false;
+                const rowValue = row[column];
+
+                switch (operator) {
+                    case '=': return String(rowValue) === value;
+                    case '>': return Number(rowValue) > Number(value);
+                    case '<': return Number(rowValue) < Number(value);
+                    default: return true;
+                }
+            });
         });
     }
 
-    if (orderByClause) {
-        const [column, order] = orderByClause.split(' ').map(s => s.trim());
+    // Ordena os resultados com base na cláusula ORDER BY
+    const orderByMatch = queryText.match(/ORDER BY\s+(.*?)(?:\s+(ASC|DESC))?/i);
+    if (orderByMatch) {
+        const column = orderByMatch[1].trim();
+        const order = orderByMatch[2] ? orderByMatch[2].toUpperCase() : 'ASC';
+
         results.sort((a, b) => {
-            const aValue = a[column.toLowerCase()];
-            const bValue = b[column.toLowerCase()];
+            const aValue = a[column];
+            const bValue = b[column];
             if (aValue < bValue) return order === 'ASC' ? -1 : 1;
             if (aValue > bValue) return order === 'ASC' ? 1 : -1;
             return 0;
         });
     }
 
-    if (selectColumns.length > 0 && selectColumns[0] !== '*') {
-        results = results.map(row => {
-            const newRow = {};
-            selectColumns.forEach(col => {
-                newRow[col] = row[col];
+    // Seleciona as colunas com base na cláusula SELECT
+    const selectMatch = queryText.match(/SELECT\s+(.*?)\s+FROM/i);
+    if (selectMatch) {
+        const selectPart = selectMatch[1].trim();
+        if (selectPart !== '*') {
+            const selectColumns = selectPart.split(',').map(c => c.trim());
+            results = results.map(row => {
+                const newRow = {};
+                selectColumns.forEach(col => {
+                    if (row.hasOwnProperty(col)) {
+                        newRow[col] = row[col];
+                    }
+                });
+                return newRow;
             });
-            return newRow;
-        });
+        }
     }
     
     currentResults = results; // Armazena os resultados para copiar
@@ -431,12 +478,22 @@ function copyResultsToNotes() {
     notesInput.scrollTop = notesInput.scrollHeight;
 }
 
-// Funções do novo popup de informações da coluna
+function showTableInfo(tableName) {
+    const modalContent = columnInfoModal.querySelector('.modal-content');
+    modalContent.innerHTML = `
+        <span class="close-button" id="info-close-btn">&times;</span>
+        <h4>TABELA: ${tableName.toUpperCase()}</h4>
+        <p>${tableDescriptions[tableName]}</p>
+    `;
+    columnInfoModal.style.display = 'flex';
+    document.getElementById('info-close-btn').addEventListener('click', hideColumnInfo);
+}
+
 function showColumnInfo(tableName, columnName) {
     const modalContent = columnInfoModal.querySelector('.modal-content');
     modalContent.innerHTML = `
         <span class="close-button" id="info-close-btn">&times;</span>
-        <h4>${columnName.toUpperCase()}</h4>
+        <h4>COLUNA: ${columnName}</h4>
         <p>${columnDescriptions[tableName][columnName]}</p>
     `;
     columnInfoModal.style.display = 'flex';

@@ -189,8 +189,11 @@ h3 {
 }
 
 .query-display {
-    min-height: 50px;
-    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 50px;
+    padding: 10px 50px;
     border: 1px dashed var(--border-color);
     border-radius: 5px;
     font-family: monospace;
@@ -228,13 +231,54 @@ h3 {
     
 }
 
-.table-item {
+/* --- ADICIONE ESTE BLOCO --- */
+
+/* Novo container para cada item da lista de tabelas */
+.table-item-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 4px;
     border-bottom: 1px solid var(--border-color);
-    padding: 2px;
 }
 
-.table-item:hover {
+/* Novo estilo para o nome da tabela (parte clicável para selecionar) */
+.table-name {
+    flex-grow: 1;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 3px;
+}
+
+.table-name:hover {
     background-color: var(--primary-color);
+    color: white;
+}
+
+/* Novo estilo para o botão de info da tabela (lupa) */
+.table-info-btn {
+    background: none;
+    border: none;
+    padding: 5px;
+    cursor: pointer;
+    margin-left: auto;
+}
+
+.table-info-btn:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+}
+
+.table-info-btn img {
+    width: 16px;
+    height: 16px;
+    filter: invert(1);
+    opacity: 0.7;
+    transition: opacity 0.3s;
+}
+
+.table-info-btn:hover img {
+    opacity: 1;
 }
 
 /* Alterando o layout das colunas para vertical */
@@ -526,4 +570,19 @@ h3 {
     margin: 10px 0;
     border: 2px solid black;
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+#query-output {
+    width: 100%;
+    background-color: transparent;
+    border: none;
+    resize: none;
+    outline: none;
+    color: var(--text-color);
+    font-family: monospace;
+    font-size: 1.1em;
+    padding: 0;
+    box-sizing: border-box;
+    overflow: hidden;
+    text-align: center;
 }
