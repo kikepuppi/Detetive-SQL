@@ -21,7 +21,7 @@ const columnInfoModal = document.getElementById('column-info-modal');
 
 const startTutorialButton = document.getElementById('start-tutorial-button');
 const timerElement = document.getElementById('timer');
-const helpButton = document.getElementById('help-button'); // Mantido para compatibilidade, mas não mais usado no HTML principal
+const helpButton = document.getElementById('help-button');
 const closeModalButton = document.querySelector('.close-button');
 const whereCloseButton = document.querySelector('.where-close');
 const orderbyCloseButton = document.querySelector('.orderby-close');
@@ -71,13 +71,14 @@ let currentQuery = {
     select: [],
     from: '',
     where: [],
-    orderBy: ''
+    orderBy: {
+        column: '',
+        direction: 'ASC' // Padrão
+    }
 };
 
 let currentResults = []; // Armazena os resultados para copiar
 
-// Variáveis do tutorial
-let tutorialStep = 0;
 const tutorialSteps = [
     {
         title: "Passo 1: O Objetivo",
@@ -109,7 +110,7 @@ const tutorialSteps = [
 const hints = [
     "Comece sua investigação buscando pelo id do local do crime. A tabela <strong>locais</strong> pode ser útil.",
     "O ladrão estava no local próximo às 14:30. Busque na tabela <strong>eventos</strong> por pessoas que estavam no local 101, perto deste horário.",
-    "Analise os históricos na tabela <strong>históricos</strong>. Quem são os prováveis suspeitos? Onde eles estavam na hora do crime?"
+    "Analise os históricos na tabela <strong>historicos</strong>. Quem são os prováveis suspeitos? Onde eles estavam na hora do crime?"
 ];
 let hintsRevealed = []; // Array para rastrear dicas reveladas
 
@@ -181,40 +182,33 @@ function startTimer() {
 function renderQuery() {
     let queryText = '';
     
-    // Constrói a parte SELECT
     if (currentQuery.select.length > 0) {
         queryText += `SELECT ${currentQuery.select.join(', ')}`;
     } else {
         queryText += `SELECT *`;
     }
 
-    // Constrói a parte FROM
     if (currentQuery.from) {
         queryText += ` FROM ${currentQuery.from}`;
     }
 
-    // Constrói a parte WHERE
     if (currentQuery.where.length > 0) {
         queryText += ` WHERE ${currentQuery.where.join(' ')}`;
     }
 
-    // Constrói a parte ORDER BY
-    if (currentQuery.orderBy) {
-        queryText += ` ORDER BY ${currentQuery.orderBy}`;
+    if (currentQuery.orderBy.column) {
+        queryText += ` ORDER BY ${currentQuery.orderBy.column} ${currentQuery.orderBy.direction}`;
     }
 
-    // Alvo da mudança: usar .value para a textarea
     queryOutput.value = queryText;
 }
 
 function renderTables() {
     tablesList.innerHTML = '';
     for (const tableName in data) {
-        // Cria um container para o nome e o botão de info
         const div = document.createElement('div');
         div.classList.add('table-item-container');
 
-        // Cria o span com o nome da tabela
         const span = document.createElement('span');
         span.textContent = tableName.toUpperCase();
         span.classList.add('table-name');
@@ -226,7 +220,6 @@ function renderTables() {
             updateModalButtons(tableName);
         });
 
-        // Cria o botão de informação (lupa)
         const infoButton = document.createElement('button');
         infoButton.classList.add('table-info-btn');
         const img = document.createElement('img');
@@ -234,7 +227,7 @@ function renderTables() {
         infoButton.appendChild(img);
         infoButton.addEventListener('click', (event) => {
             showTableInfo(tableName);
-            event.stopPropagation(); // Impede que o clique no botão selecione a tabela
+            event.stopPropagation();
         });
 
         div.appendChild(span);
@@ -280,34 +273,72 @@ function renderColumns(tableName) {
 }
 
 function clearQuery() {
-    currentQuery = { select: [], from: '', where: [], orderBy: '' };
+    currentQuery = { select: [], from: '', where: [], orderBy: { column: '', direction: 'ASC' } };
     queryOutput.value = 'Sua consulta será exibida aqui...';
     columnsList.innerHTML = '';
     resultsOutput.innerHTML = '';
 }
 
-function executeQuery() {
+function syncQueryObjectFromText() {
     const queryText = queryOutput.value.trim();
-    let results = [];
 
-    // Encontra o nome da tabela com uma expressão regular
+    // Resetar partes da query para garantir que não haja lixo de execuções anteriores
+    currentQuery.select = [];
+    currentQuery.from = '';
+    currentQuery.where = [];
+    currentQuery.orderBy = { column: '', direction: 'ASC' };
+
+    // 1. Sincronizar FROM
     const fromMatch = queryText.match(/FROM\s+(\w+)/i);
-    if (!fromMatch) {
-        resultsOutput.innerHTML = '<p class="error-message">Consulta inválida. Não foi possível encontrar a cláusula FROM.</p>';
+    if (fromMatch) {
+        currentQuery.from = fromMatch[1];
+    }
+
+    // 2. Sincronizar SELECT
+    const selectMatch = queryText.match(/SELECT\s+(.*?)\s+FROM/i);
+    if (selectMatch) {
+        const selectPart = selectMatch[1].trim();
+        if (selectPart === '*') {
+            currentQuery.select = []; // Usamos array vazio para representar SELECT *
+        } else {
+            currentQuery.select = selectPart.split(',').map(c => c.trim());
+        }
+    }
+
+    // 3. Sincronizar WHERE
+    const whereMatch = queryText.match(/WHERE\s+(.*?)(?:\s+ORDER BY|$)/i);
+    if (whereMatch) {
+        // Armazenamos a cláusula inteira. A lógica de execução vai dividi-la.
+        currentQuery.where.push(whereMatch[1].trim());
+    }
+
+    // 4. Sincronizar ORDER BY
+    const orderByMatch = queryText.match(/ORDER BY\s+([a-zA-Z0-9_]+)\s*(ASC|DESC)?/i);
+    if (orderByMatch) {
+        currentQuery.orderBy.column = orderByMatch[1];
+        currentQuery.orderBy.direction = orderByMatch[2] ? orderByMatch[2].toUpperCase() : 'ASC';
+    }
+}
+
+function executeQuery() {
+    
+    syncQueryObjectFromText();
+    if (!currentQuery.from) {
+        resultsOutput.innerHTML = '<p class="error-message">Consulta inválida. Cláusula FROM não encontrada.</p>';
         return;
     }
-    const fromTable = fromMatch[1];
-    
+
+    const fromTable = currentQuery.from;
     if (!data[fromTable]) {
         resultsOutput.innerHTML = `<p class="error-message">Tabela "${fromTable}" não encontrada.</p>`;
         return;
     }
-    results = [...data[fromTable]];
 
-    // Filtra os resultados com base na cláusula WHERE
-    const whereMatch = queryText.match(/WHERE\s+(.*?)(?:\s+ORDER BY|$)/i);
-    if (whereMatch) {
-        const whereClause = whereMatch[1];
+    let results = [...data[fromTable]];
+
+    // Filtra com base no WHERE
+    if (currentQuery.where.length > 0) {
+        const whereClause = currentQuery.where[0]; // Pegamos a cláusula inteira
         const conditions = whereClause.split(/\s+AND\s+/i);
 
         results = results.filter(row => {
@@ -332,40 +363,41 @@ function executeQuery() {
         });
     }
 
-    // Ordena os resultados com base na cláusula ORDER BY
-    const orderByMatch = queryText.match(/ORDER BY\s+(.*?)(?:\s+(ASC|DESC))?/i);
-    if (orderByMatch) {
-        const column = orderByMatch[1].trim();
-        const order = orderByMatch[2] ? orderByMatch[2].toUpperCase() : 'ASC';
+    // Ordena com base no ORDER BY
+    if (currentQuery.orderBy.column) {
+        const { column, direction } = currentQuery.orderBy;
+        
+        if (results.length > 0 && results[0].hasOwnProperty(column)) {
+            results.sort((a, b) => {
+                const aValue = a[column];
+                const bValue = b[column];
 
-        results.sort((a, b) => {
-            const aValue = a[column];
-            const bValue = b[column];
-            if (aValue < bValue) return order === 'ASC' ? -1 : 1;
-            if (aValue > bValue) return order === 'ASC' ? 1 : -1;
-            return 0;
-        });
-    }
-
-    // Seleciona as colunas com base na cláusula SELECT
-    const selectMatch = queryText.match(/SELECT\s+(.*?)\s+FROM/i);
-    if (selectMatch) {
-        const selectPart = selectMatch[1].trim();
-        if (selectPart !== '*') {
-            const selectColumns = selectPart.split(',').map(c => c.trim());
-            results = results.map(row => {
-                const newRow = {};
-                selectColumns.forEach(col => {
-                    if (row.hasOwnProperty(col)) {
-                        newRow[col] = row[col];
-                    }
-                });
-                return newRow;
+                if (typeof aValue === 'number' && typeof bValue === 'number') {
+                    return direction === 'ASC' ? aValue - bValue : bValue - aValue;
+                } else {
+                    if (aValue < bValue) return direction === 'ASC' ? -1 : 1;
+                    if (aValue > bValue) return direction === 'ASC' ? 1 : -1;
+                    return 0;
+                }
             });
         }
     }
+
+    // Seleciona as colunas
+    if (currentQuery.select.length > 0) {
+        const selectColumns = currentQuery.select;
+        results = results.map(row => {
+            const newRow = {};
+            selectColumns.forEach(col => {
+                if (row.hasOwnProperty(col)) {
+                    newRow[col] = row[col];
+                }
+            });
+            return newRow;
+        });
+    }
     
-    currentResults = results; // Armazena os resultados para copiar
+    currentResults = results;
     displayResults(results);
 }
 
@@ -424,12 +456,10 @@ function resetGame() {
     showScreen(startScreen);
     timerElement.textContent = '15:00';
     hintsRevealed = [];
-    // Resetar o estado dos botões de dica
     document.querySelectorAll('.btn-hint').forEach(btn => btn.disabled = false);
     document.querySelectorAll('.hidden-hint').forEach(hint => hint.style.display = 'none');
 }
 
-// Funções do Tutorial
 function renderTutorialStep(step) {
     tutorialContent.innerHTML = `<h3>${tutorialSteps[step].title}</h3><img src="${tutorialSteps[step].image}" alt="${tutorialSteps[step].title}" class="img_tutorial">${tutorialSteps[step].content}`;
     prevTutorialButton.style.display = step === 0 ? 'none' : 'inline-block';
@@ -438,7 +468,6 @@ function renderTutorialStep(step) {
     skipTutorialButton.style.display = step === tutorialSteps.length - 1 ? 'none' : 'inline-block';
 }
 
-// Funções do Ajuda
 function openHelpModal() {
     const commandHelpDiv = document.getElementById('command-help');
     helpModal.style.display = 'block';
@@ -463,11 +492,9 @@ function copyResultsToNotes() {
 
     let notesText = `\n\n--- Resultados da Consulta ---\n`;
     
-    // Constrói o cabeçalho
     const columns = Object.keys(currentResults[0]);
     notesText += columns.join('\t') + '\n';
 
-    // Constrói as linhas
     currentResults.forEach(row => {
         const values = columns.map(col => row[col]);
         notesText += values.join('\t') + '\n';
@@ -504,26 +531,22 @@ function hideColumnInfo() {
     columnInfoModal.style.display = 'none';
 }
 
-// Função para atualizar os botões de colunas nos modais
 function updateModalButtons(tableName) {
     const whereColumnsContainer = document.getElementById('where-columns');
     const orderbyColumnsContainer = document.getElementById('orderby-columns');
 
-    // Limpa os containers existentes, mas mantém o título "Colunas:"
     whereColumnsContainer.innerHTML = '<h4>Colunas:</h4>';
     orderbyColumnsContainer.innerHTML = '<h4>Colunas:</h4>';
 
     if (data[tableName] && data[tableName].length > 0) {
         const columns = Object.keys(data[tableName][0]);
         columns.forEach(col => {
-            // Botões para o modal WHERE
             const whereBtn = document.createElement('button');
             whereBtn.classList.add('btn', 'btn-column');
             whereBtn.textContent = col;
             whereBtn.addEventListener('click', () => {
-                // Remove o nome da coluna anterior, mas mantém o operador
                 let currentValue = whereInput.value.trim();
-                const operators = ['=', '>', '<', 'IN']; // Adicione outros operadores se necessário
+                const operators = ['=', '>', '<', 'IN'];
                 const lastOperatorIndex = Math.max(...operators.map(op => currentValue.lastIndexOf(op)));
 
                 if (lastOperatorIndex > -1) {
@@ -534,12 +557,11 @@ function updateModalButtons(tableName) {
             });
             whereColumnsContainer.appendChild(whereBtn);
 
-            // Botões para o modal ORDER BY
             const orderbyBtn = document.createElement('button');
             orderbyBtn.classList.add('btn', 'btn-column');
             orderbyBtn.textContent = col;
             orderbyBtn.addEventListener('click', () => {
-                orderbyInput.value = col; // Simplesmente substitui o valor
+                orderbyInput.value = col;
             });
             orderbyColumnsContainer.appendChild(orderbyBtn);
         });
@@ -552,43 +574,35 @@ startTutorialButton.addEventListener('click', () => {
     tutorialStep = 0;
     renderTutorialStep(tutorialStep);
 });
-
 prevTutorialButton.addEventListener('click', () => {
     if (tutorialStep > 0) {
         tutorialStep--;
         renderTutorialStep(tutorialStep);
     }
 });
-
 nextTutorialButton.addEventListener('click', () => {
     if (tutorialStep < tutorialSteps.length - 1) {
         tutorialStep++;
         renderTutorialStep(tutorialStep);
     }
 });
-
 skipTutorialButton.addEventListener('click', () => {
     showScreen(storyScreen);
 });
-
 startStoryButton.addEventListener('click', () => {
     showScreen(storyScreen);
 });
-
 startExplanationButton.addEventListener('click', () => {
     showScreen(sqlExplanationScreen);
 });
-
 fecharButton.addEventListener('click', () => {
     showScreen(mainGameScreen);
     window.scrollTo(0, 0);
 });
-
 fecharButton2.addEventListener('click', () => {
     showScreen(mainGameScreen);
     window.scrollTo(0, 0);
 });
-
 startMainGameButton.addEventListener('click', () => {
     showScreen(mainGameScreen);
     renderTables();
@@ -597,18 +611,13 @@ startMainGameButton.addEventListener('click', () => {
     window.scrollTo(0, 0);
 });
 
-// Event listeners para os novos botões do header
 contextButton.addEventListener('click', () => {
     showScreen(storyScreen2);
 });
-
 commandsButton.addEventListener('click', () => {
     showScreen(sqlExplanationScreen2);
 });
-
-hintsButton.addEventListener('click', openHelpModal); // O botão de dicas abrirá o modal de ajuda
-
-// helpButton.addEventListener('click', openHelpModal); // Este botão foi removido do HTML principal
+hintsButton.addEventListener('click', openHelpModal);
 closeModalButton.addEventListener('click', closeHelpModal);
 window.addEventListener('click', (event) => {
     if (event.target == helpModal || event.target == whereModal || event.target == orderbyModal) {
@@ -623,13 +632,10 @@ document.addEventListener('click', (event) => {
     }
 });
 
-
 document.getElementById('reveal-hint-1').addEventListener('click', () => revealHint(1));
 document.getElementById('reveal-hint-2').addEventListener('click', () => revealHint(2));
 document.getElementById('reveal-hint-3').addEventListener('click', () => revealHint(3));
 
-
-// Substitua o seu event listener de keywordsButtons por este
 keywordsButtons.addEventListener('click', (event) => {
     if (event.target.classList.contains('keyword-btn')) {
         const keyword = event.target.dataset.keyword;
@@ -638,18 +644,22 @@ keywordsButtons.addEventListener('click', (event) => {
         } else if (keyword === 'ORDER BY') {
             orderbyModal.style.display = 'block';
         } else if (keyword === 'ASC') {
-            if (currentQuery.orderBy) {
-                currentQuery.orderBy = currentQuery.orderBy.split(' ')[0] + ' ASC';
+            if (currentQuery.orderBy.column) {
+                currentQuery.orderBy.direction = 'ASC';
+                renderQuery();
             }
         } else if (keyword === 'DESC') {
-            if (currentQuery.orderBy) {
-                currentQuery.orderBy = currentQuery.orderBy.split(' ')[0] + ' DESC';
+            if (currentQuery.orderBy.column) {
+                currentQuery.orderBy.direction = 'DESC';
+                renderQuery();
             }
-        } 
-        else if (keyword === 'AND') {
+        } else if (keyword === 'AND') {
             currentQuery.where.push('AND');
+            renderQuery();
+        } else if (keyword === 'FROM') {
+            currentQuery.from = 'nome_da_tabela';
+            renderQuery();
         }
-        renderQuery();
     }
 });
 
@@ -666,35 +676,31 @@ whereConfirmButton.addEventListener('click', () => {
 orderbyConfirmButton.addEventListener('click', () => {
     const input = orderbyInput.value.trim();
     if (input) {
-        currentQuery.orderBy = `${input} ASC`;
+        currentQuery.orderBy.column = input;
+        currentQuery.orderBy.direction = 'ASC'; // Sempre começa com ASC
         orderbyInput.value = '';
         orderbyModal.style.display = 'none';
         renderQuery();
     }
 });
 
-
 executeQueryButton.addEventListener('click', executeQuery);
 clearQueryButton.addEventListener('click', clearQuery);
 copyResultsButton.addEventListener('click', copyResultsToNotes);
 submitAnswerButton.addEventListener('click', handleSubmitAnswer);
-
 restartButtons.forEach(button => {
     button.addEventListener('click', resetGame);
 });
 
-// Event Listener para os botões de operadores do WHERE
 document.getElementById('where-operators').addEventListener('click', (event) => {
     if (event.target.classList.contains('btn-operator')) {
         const operator = event.target.dataset.value;
         const currentValue = whereInput.value.trim();
         const parts = currentValue.split(/\s+/);
         
-        // Verifica se já tem uma coluna na caixa de texto
         if (parts.length === 1 && parts[0] !== '') {
             whereInput.value = `${parts[0]} ${operator} `;
         } else {
-            // Se não tiver coluna, ou se já tiver um operador, simplesmente adiciona o operador
             whereInput.value = currentValue + ` ${operator} `;
         }
     }
