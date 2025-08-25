@@ -586,3 +586,13 @@ h3 {
     overflow: hidden;
     text-align: center;
 }
+
+.skip-btn {
+    background-color: #dc3545;
+    color: white;
+    margin-left: 0.5em;
+}
+
+.skip-btn:hover {
+    background-color: #c82333;
+}
