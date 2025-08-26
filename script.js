@@ -88,7 +88,7 @@ const tutorialSteps = [
     {
         title: "Passo 2: Construindo a Consulta",
         image: "assets/images/step2.png",
-        content: "<p>A área central é onde você constrói a sua consulta. Use os botões de comandos, tabelas e colunas para montar a sua busca. A área da consulta não é digitável, mas você pode clicar nos elementos para adicioná-los à sua consulta. Por exemplo, clique no nome de uma tabela para adicioná-la à consulta e selecionar todas as suas colunas.</p>"
+        content: "<p>A área central é onde você constrói a sua consulta. Use os botões de comandos, tabelas e colunas para montar a sua busca. A área da consulta é digitável, mas você também pode clicar nos elementos para adicioná-los à sua consulta. Por exemplo, clique no nome de uma tabela para adicioná-la à consulta e selecionar todas as suas colunas.</p>"
     },
     {
         title: "Passo 3: Tabelas e Colunas",
@@ -115,7 +115,7 @@ const hints = [
 let hintsRevealed = []; // Array para rastrear dicas reveladas
 
 const tableDescriptions = {
-    pessoas: "Contém informações sobre todas as pessoas registradas no evento, como nome, ocupação, idade e sua localização atual.",
+    pessoas: "Contém informações sobre todas as pessoas registradas no evento, como nome, ocupação e idade.",
     locais: "Lista todos os locais do evento, como estandes e laboratórios, incluindo sua capacidade e descrição.",
     crimes: "Registra os detalhes do crime que ocorreu, incluindo a descrição, o local e o horário exato.",
     eventos: "Um log de todas as atividades que ocorreram, registrando quem (pessoa_id) esteve onde (local_id) e quando (hora).",
