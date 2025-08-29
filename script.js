@@ -455,6 +455,8 @@ function handleSubmitAnswer() {
     }
 }
 
+// Substitua sua função resetGame por esta versão completa e corrigida
+
 function resetGame() {
     clearInterval(timerInterval);
     answerInput.value = '';
@@ -465,6 +467,54 @@ function resetGame() {
     hintsRevealed = [];
     document.querySelectorAll('.btn-hint').forEach(btn => btn.disabled = false);
     document.querySelectorAll('.hidden-hint').forEach(hint => hint.style.display = 'none');
+
+    // --- CÓDIGO ADICIONADO PARA CORRIGIR O PROBLEMA ---
+    // Reseta o estado da tela de vitória para a próxima vez que o jogador vencer.
+    
+    // Mostra o formulário novamente
+    document.getElementById('submit-form-container').style.display = 'block';
+    
+    // Esconde a mensagem de "Pontuação Registrada!"
+    document.getElementById('final-victory-message').style.display = 'none';
+
+    // Limpa os campos do formulário da leaderboard
+    document.getElementById('player-name').value = '';
+    document.getElementById('player-phone').value = '';
+
+    // Restaura o botão de envio do formulário ao seu estado original
+    const submitBtn = document.getElementById('leaderboard-form').querySelector('button');
+    submitBtn.textContent = 'Enviar Pontuação';
+    submitBtn.disabled = false;
+}
+
+function resetGame() {
+    clearInterval(timerInterval);
+    answerInput.value = '';
+    notesInput.value = '';
+    clearQuery();
+    showScreen(startScreen);
+    timerElement.textContent = '15:00';
+    hintsRevealed = [];
+    document.querySelectorAll('.btn-hint').forEach(btn => btn.disabled = false);
+    document.querySelectorAll('.hidden-hint').forEach(hint => hint.style.display = 'none');
+
+    // --- CÓDIGO ADICIONADO PARA CORRIGIR O PROBLEMA ---
+    // Reseta o estado da tela de vitória para a próxima vez que o jogador vencer.
+    
+    // Mostra o formulário novamente
+    document.getElementById('submit-form-container').style.display = 'block';
+    
+    // Esconde a mensagem de "Pontuação Registrada!"
+    document.getElementById('final-victory-message').style.display = 'none';
+
+    // Limpa os campos do formulário da leaderboard
+    document.getElementById('player-name').value = '';
+    document.getElementById('player-phone').value = '';
+
+    // Restaura o botão de envio do formulário ao seu estado original
+    const submitBtn = document.getElementById('leaderboard-form').querySelector('button');
+    submitBtn.textContent = 'Enviar Pontuação';
+    submitBtn.disabled = false;
 }
 
 function renderTutorialStep(step) {
