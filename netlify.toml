@@ -1,0 +1,13 @@
+# netlify.toml
+
+# Configuração para o ambiente de desenvolvimento local (netlify dev)
+[dev]
+  # Define a pasta onde estão os arquivos estáticos do jogo (html, css, js)
+  publish = "."
+  # Define a porta, para manter a consistência com o erro anterior
+  port = 8888
+
+# Configuração principal das funções
+[functions]
+  # Informa à Netlify que a pasta das funções se chama "functions" dentro da pasta "netlify"
+  directory = "netlify/functions/"

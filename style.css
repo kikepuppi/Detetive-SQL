@@ -596,3 +596,74 @@ h3 {
 .skip-btn:hover {
     background-color: #c82333;
 }
+
+#submit-form-container {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: var(--hover-color);
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+}
+
+#submit-form-container h2 {
+    margin-top: 0;
+    color: var(--primary-color);
+}
+
+#submit-form-container p {
+    margin-bottom: 20px;
+}
+
+/* Estilo do formulário e campos de input */
+#leaderboard-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+#leaderboard-form input {
+    padding: 12px;
+    font-size: 1em;
+    border-radius: 5px;
+    border: 2px solid var(--border-color);
+    background-color: var(--explanation-box-color);
+    color: var(--text-color);
+    transition: border-color 0.3s ease;
+}
+
+#leaderboard-form input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+
+/* Garante que o botão do formulário use o estilo padrão .btn */
+#leaderboard-form button {
+    font-size: 1.1em;
+    font-weight: bold;
+}
+
+/* Container da mensagem final de vitória */
+#final-victory-message {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 30px;
+    background-color: var(--hover-color);
+    border-radius: 8px;
+    border: 1px solid var(--primary-color);
+}
+
+#final-victory-message h2 {
+    margin-top: 0;
+}
+
+#final-victory-message p {
+    font-size: 1.2em;
+    line-height: 1.6;
+    margin-bottom: 25px;
+}
+
+#final-victory-message strong {
+    color: var(--primary-color);
+    font-size: 1.1em;
+}

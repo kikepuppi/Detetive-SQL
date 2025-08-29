@@ -66,6 +66,7 @@ const hintsButton = document.getElementById('hints-button');
 let timeLimit = 900; // 15 minutos em segundos
 let timerInterval;
 const correctAnswer = 'João Silva'; // O nome do ladrão
+let finalTime = 0;
 
 let currentQuery = {
     select: [],
@@ -442,6 +443,12 @@ function handleSubmitAnswer() {
     clearInterval(timerInterval);
 
     if (finalAnswer.toUpperCase() === correctAnswer.toUpperCase()) {
+        const timeLeft = (timerElement.textContent.split(':')[0] * 60) + parseInt(timerElement.textContent.split(':')[1], 10);
+        finalTime = timeLimit - timeLeft; // Tempo em segundos
+        const minutes = Math.floor(finalTime / 60);
+        const seconds = finalTime % 60;
+        
+        document.getElementById('final-time-info').textContent = `Você resolveu o caso em ${minutes}m ${seconds}s.`;
         showScreen(victoryScreen);
     } else {
         showScreen(gameOverScreen);
@@ -703,5 +710,44 @@ document.getElementById('where-operators').addEventListener('click', (event) => 
         } else {
             whereInput.value = currentValue + ` ${operator} `;
         }
+    }
+});
+
+document.getElementById('leaderboard-form').addEventListener('submit', async (event) => {
+    event.preventDefault();
+    
+    const name = document.getElementById('player-name').value;
+    const phone = document.getElementById('player-phone').value;
+
+    // Mostra um feedback de carregamento (opcional, mas recomendado)
+    event.target.querySelector('button').textContent = 'Enviando...';
+    event.target.querySelector('button').disabled = true;
+
+    try {
+        const response = await fetch('/.netlify/functions/submit-score', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ nome: name, tempo: finalTime, telefone: phone }),
+        });
+
+        if (!response.ok) throw new Error('Falha na comunicação com o servidor.');
+
+        const data = await response.json();
+        const rank = data.rank;
+
+        // Prepara a mensagem final
+        const minutes = Math.floor(finalTime / 60);
+        const seconds = finalTime % 60;
+        document.getElementById('victory-text').innerHTML = `Parabéns, Detetive ${name}!<br>Você completou em <strong>${minutes}m ${seconds}s</strong>.<br>Sua posição na leaderboard é: <strong>#${rank}</strong>`;
+
+        // Esconde o formulário e mostra a mensagem final
+        document.getElementById('submit-form-container').style.display = 'none';
+        document.getElementById('final-victory-message').style.display = 'block';
+
+    } catch (error) {
+        console.error('Erro ao submeter pontuação:', error);
+        alert('Não foi possível registrar sua pontuação. Tente novamente.');
+        event.target.querySelector('button').textContent = 'Enviar Pontuação';
+        event.target.querySelector('button').disabled = false;
     }
 });
